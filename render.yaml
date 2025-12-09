@@ -4,12 +4,9 @@ services:
       name: draft-helper-api
       env: node
       plan: free
-
       rootDir: backend # change if needed
-
       buildCommand: npm install
       startCommand: node server.js
-
       autoDeploy: true
 
       envVars:
@@ -24,10 +21,11 @@ services:
 
           - key: AUTH0_DOMAIN
             sync: false
-
           - key: AUTH0_AUDIENCE
             sync: false
 
+          # You can also wire this from the frontend service's host if you want,
+          # but hardcoding is fine too once you know the URL
           - key: CORS_ORIGIN
             value: https://draft-helper-frontend.onrender.com
 
@@ -36,16 +34,14 @@ services:
       name: draft-helper-frontend
       env: static
       plan: free
-
       rootDir: frontend # update if your Vite project is elsewhere
-
       buildCommand: npm install && npm run build
       staticPublishPath: dist
 
-      # Expose backend API URL to Vite at build time
       envVars:
-          - key: VITE_API_BASE
+          # Get the backend host from Render. Valid properties: host, hostport, port, connectionString
+          - key: VITE_API_HOST
             fromService:
                 type: web
                 name: draft-helper-api
-                property: url
+                property:
