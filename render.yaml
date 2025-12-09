@@ -31,7 +31,6 @@ services:
     - type: web
       name: draft-helper-frontend
       env: static
-      plan: free
       rootDir: frontend
       buildCommand: npm install && npm run build
       staticPublishPath: dist
