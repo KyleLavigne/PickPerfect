@@ -5,8 +5,7 @@ services:
       env: node
       plan: free
 
-      # If your server.js is in the backend folder, change if needed
-      rootDir: backend
+      rootDir: backend # change if needed
 
       buildCommand: npm install
       startCommand: node server.js
@@ -14,39 +13,37 @@ services:
       autoDeploy: true
 
       envVars:
-          # Standard Node/Express env
           - key: NODE_ENV
             value: production
           - key: PORT
             value: 4000
 
-          # MongoDB Atlas connection string (set in Render dashboard)
+          # ==== Secure environment variables set in Render dashboard ====
           - key: MONGODB_URI
             sync: false
 
-          # Auth0 config (set these in Render dashboard)
           - key: AUTH0_DOMAIN
             sync: false
+
           - key: AUTH0_AUDIENCE
             sync: false
 
-          # CORS origin for your frontend (update with your actual frontend URL)
           - key: CORS_ORIGIN
             value: https://draft-helper-frontend.onrender.com
 
-    # ---------- Frontend (Vite React) ----------
-    - type: static
+    # ---------- Frontend (Vite React static site) ----------
+    - type: web
       name: draft-helper-frontend
+      env: static
       plan: free
 
-      # If your Vite app is in /frontend
-      rootDir: frontend
+      rootDir: frontend # update if your Vite project is elsewhere
 
       buildCommand: npm install && npm run build
       staticPublishPath: dist
 
+      # Expose backend API URL to Vite at build time
       envVars:
-          # Point frontend to the API URL Render gives the backend service
           - key: VITE_API_BASE
             fromService:
                 type: web
